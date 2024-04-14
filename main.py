@@ -23,8 +23,9 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsScene
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtCore import Qt
 import gui
+import my
 print('[main] modules imported')
-
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 CarsTotal = 5
 RedCarsID = {1: 1, 2: 2, 3: 3, 4: 4, 5: 5}
 BlueCarsID = {1: 101, 2: 102, 3: 103, 4: 104, 5: 105}
@@ -32,6 +33,8 @@ classes = ["car", "armor1red", "armor2red", "armor3red", "armor4red", "armor5red
            "armor1blue", "armor2blue", "armor3blue", "armor4blue", "armor5blue", "base", "ignore"]
 
 ENEMY_COLOR = BLUE
+PATH='./weights/yolov8/0801_sumup_80.pt'
+torch.load(PATH, map_location=torch.device('cuda:0'))
 device = torch.device('cuda:0')
 
 main_cfg_path = "./configs/main_config.yaml"
@@ -41,7 +44,7 @@ bin_cam_cfg = YAML().load(open(binocular_camera_cfg_path, encoding='Utf-8', mode
 
 portx = main_cfg['portx']
 if main_cfg['debug']:
-    portx = 'COM7'
+    portx = 'COM8'
 
 arc_roll = bin_cam_cfg['set']['roll'] * np.pi / 180
 cos_arc_roll = np.cos(arc_roll)
@@ -160,7 +163,7 @@ def main():
 
     elif main_cfg['ctrl']['MODE'] == 'camera':
         print("\nLoading binocular camera")
-        camera_left, camera_right, ret_p, ret_q = bc.get_camera(bin_cam_cfg)
+        camera_left, camera_right,capl,capr, ret_p, ret_q = my.get_camera()
         print("Done")
 
     print("\nLoading matching model")
@@ -179,8 +182,8 @@ def main():
                 ret, image_right = camera_right.read()
 
             elif main_cfg['ctrl']['MODE'] == 'camera':
-                image_left = bc.get_frame(camera_left, 'left_camera', ret_p)
-                image_right = bc.get_frame(camera_right, 'right_camera', ret_q)
+                image_left = camera_left
+                image_right = camera_right
 
             if image_left is None or image_right is None:
                 continue
@@ -228,8 +231,8 @@ def main():
             ret, image_right = camera_right.read()
 
         elif main_cfg['ctrl']['MODE'] == 'camera':
-            image_left = bc.get_frame(camera_left, 'left_camera', ret_p)
-            image_right = bc.get_frame(camera_right, 'right_camera', ret_q)
+            retl, image_left = capl.read()
+            retr, image_right = capr.read()
 
         if image_right is not None and image_left is not None:
             if main_cfg['ctrl']['RECORDING']:

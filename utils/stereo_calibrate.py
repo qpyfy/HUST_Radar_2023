@@ -31,7 +31,7 @@ while Loop:
     cv2.imshow('right', image_right)
 
     cnt += 1
-    cv2.waitKey(1500)  # 1500
+    cv2.waitKey(4)  # 1500
     if ret_p.contents:
         cv2.imwrite(ir + "/left/" + str(cnt) + suffix, image_left)
     if ret_q.contents:

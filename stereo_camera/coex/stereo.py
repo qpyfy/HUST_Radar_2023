@@ -10,8 +10,8 @@ import torch
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
-from pytorch_lightning.core.lightning import LightningModule
-from pytorch_lightning.loggers import TestTubeLogger
+from pytorch_lightning.core.module import LightningModule
+from pytorch_lightning.loggers import CSVLogger
 
 from ruamel.yaml import YAML
 
@@ -324,7 +324,7 @@ if __name__ == '__main__':
             logging_pth, cfg['model']['name'], cfg['training']['save_version'])
         # resume_from_checkpoint = None
 
-        logger = TestTubeLogger(
+        logger = CSVLogger(
             logging_pth,
             cfg['model']['name'],
             version=version)
@@ -413,7 +413,7 @@ if __name__ == '__main__':
         #     logging_pth, cfg['model']['name'], load_version)
         stereo = Stereo.load_from_checkpoint(ckpt, cfg=cfg, dataname=log_name)
 
-        logger = TestTubeLogger(
+        logger = CSVLogger(
             logging_pth,
             cfg['model']['name'],
             version=cfg['training']['save_version'])

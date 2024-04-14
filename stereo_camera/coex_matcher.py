@@ -22,9 +22,12 @@ class CoExMatcher:
     def __init__(self, cam_cfg):
         self.cfg = None
         self.load_configs('./stereo_camera/configs/stereo/{}'.format(config))
+        
         self.pose_ssstereo = Stereo.load_from_checkpoint(self.cfg['stereo_ckpt'],
                                                          strict=False,
-                                                         cfg=self.cfg).cuda()
+                                                         cfg=self.cfg,
+                                                         map_location=device).cuda()
+        
         self.pose_ssstereo.eval()
         """self.model = torch.jit.load("./coex/zoo/torchscript/CoEx.pt", map_location="cuda:0")
         self.model.eval()"""

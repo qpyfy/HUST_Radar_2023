@@ -1,8 +1,8 @@
-debug: False
+debug: True
 
 
 ctrl:
-  MODE: 'video'  # 'camera'
+  MODE: 'camera'  # 'camera'
   DETECT: True
   RECORDING: True
   GUI: True
@@ -25,4 +25,4 @@ video:
 weights:
   yolov8: './weights/yolov8/0801_sumup_80.pt'
 
-portx: 'COM7'
+portx: 'COM8'

@@ -3,7 +3,7 @@ import my_serial as messager
 
 
 last = time.time()
-portx = 'COM3'
+portx = 'COM8'
 ser = messager.serial_init(portx)
 
 while True:
